@@ -62,30 +62,39 @@ function colorHash(inputString) {
 }
 
 function Create_User() {
-  const [userData, setUserData] = useState({
-    FirstName: "",
-    LastName: "",
-    Age: "",
-    Gender: "",
-    Email: "",
-  });
-
   const users = useUser();
   const setUsers = useSetUser();
 
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [email, setEmail] = useState("");
+
   function give_faker_data() {
-    setUserData({
-      FirstName: faker.person.firstName(),
-      LastName: faker.person.lastName(),
-      Age: Math.floor(Math.random() * 100) + 1,
-      Gender: faker.person.sexType(),
-      Email: faker.internet.email(),
-    });
+    setName(faker.person.firstName());
+    setLastName(faker.person.lastName());
+    setAge("" + Math.floor(Math.random() * 100));
+    setGender(faker.person.sexType());
+    setEmail(faker.internet.email());
   }
 
   function submit_user() {
-    setUsers([...users, userData]);
-    //alert user was created
+    const newuser = {
+      FirstName: name,
+      LastName: lastName,
+      Age: age,
+      Gender: gender,
+      Email: email,
+    };
+    setUsers([...users, newuser]);
+
+    setName("");
+    setLastName("");
+    setAge("");
+    setGender("");
+    setEmail("");
+
     alert("User was created");
   }
 
@@ -95,55 +104,48 @@ function Create_User() {
 
       <TextAvatar
         style={styles.TextAvatar}
-        backgroundColor={colorHash(userData.FirstName).hex}
-        textColor={colorHash(userData.LastName).hex}
+        backgroundColor={colorHash(name).hex}
+        textColor={colorHash(lastName).hex}
         size={60}
         type={"circle"}
       >
-        {userData.FirstName + " " + userData.LastName}
+        {name + " " + lastName}
       </TextAvatar>
 
       <TextInput
         style={styles.input}
         placeholder="FirstName"
-        value={userData.FirstName}
-        onChange={(FirstName) =>
-          setUserData({ ...userData, FirstName: FirstName.target.value })
-        }
+        value={name}
+        onChangeText={setName}
       />
       <TextInput
         style={styles.input}
         placeholder="LastName"
-        value={userData.LastName}
-        onChange={(LastName) => {
-          setUserData({ ...userData, LastName: LastName.target.value });
-        }}
+        value={lastName}
+        onChangeText={setLastName}
       />
       <TextInput
         style={styles.input}
         placeholder="Age"
-        value={userData.Age}
-        onChange={(Age) => setUserData({ ...userData, Age: Age.target.value })}
+        value={age}
+        onChangeText={setAge}
       />
       <TextInput
         style={styles.input}
         placeholder="Gender"
-        value={userData.Gender}
-        onChange={(Gender) =>
-          setUserData({ ...userData, Gender: Gender.target.value })
-        }
+        value={gender}
+        onChangeText={setGender}
       />
       <TextInput
         style={styles.input}
         placeholder="Email"
-        value={userData.Email}
-        onChange={(Email) =>
-          setUserData({ ...userData, Email: Email.target.value })
-        }
+        value={email}
+        onChangeText={setEmail}
       />
-
-      <Button title="Submit User" onPress={() => submit_user()} />
-      <Button title="Give faker data" onPress={() => give_faker_data()} />
+      <View style={styles.button}>
+        <Button title="Submit User" onPress={() => submit_user()} />
+        <Button title="Give faker data" onPress={() => give_faker_data()} />
+      </View>
     </View>
   );
 }
@@ -242,6 +244,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   input: {
+    width: "80%",
     height: 40,
     margin: 12,
     borderWidth: 1,
@@ -258,12 +261,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   Item: {
-    justifyContent: "space-evenly",
+    justifyContent: "center",
     display: "flex",
     alignItems: "center",
     padding: 10,
     margin: 10,
-    flexDirection: "row",
+    flexDirection: "column",
     borderWidth: 1,
     borderRadius: 10,
     borderColor: "black",
@@ -272,5 +275,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  button: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "70%",
   },
 });
